@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:sellingshop/bodys/saler_order.dart';
-import 'package:sellingshop/bodys/saler_product.dart';
-import 'package:sellingshop/bodys/saler_shop.dart';
+import 'package:sellingshop/bodys/admin_order.dart';
+import 'package:sellingshop/bodys/admin_shop.dart';
+import 'package:sellingshop/bodys/admin_user.dart';
 import 'package:sellingshop/models/user_model.dart';
 import 'package:sellingshop/utility/my_constant.dart';
 import 'package:sellingshop/widgets/show_image.dart';
@@ -13,17 +13,17 @@ import 'package:sellingshop/widgets/show_signout.dart';
 import 'package:sellingshop/widgets/show_title.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SalerService extends StatefulWidget {
-  const SalerService({Key? key}) : super(key: key);
+class AdminService extends StatefulWidget {
+  const AdminService({Key? key}) : super(key: key);
 
   @override
-  _SalerServiceState createState() => _SalerServiceState();
+  _AdminServiceState createState() => _AdminServiceState();
 }
 
-class _SalerServiceState extends State<SalerService> {
+class _AdminServiceState extends State<AdminService> {
   List<Widget> widgets = [
-    const SalerProduct(),
-    const SalerShop()
+    const AdminShop(),
+    const AdminUser(),
   ];
   int indexwidget = 0;
   UserModel? userModel;
@@ -34,7 +34,7 @@ class _SalerServiceState extends State<SalerService> {
     getUserModel();
   }
 
-  Future getUserModel() async {
+   Future getUserModel() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String id = preferences.getString('id')!;
     String path =
@@ -52,7 +52,7 @@ class _SalerServiceState extends State<SalerService> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(MyConstant.appName),
+        title: const Text('Admin'),
       ),
       drawer: widgets.isEmpty
           ? const SizedBox()
@@ -63,8 +63,8 @@ class _SalerServiceState extends State<SalerService> {
                   Column(
                     children: [
                       buildHead(),
-                      menuProduct(),
                       menuShop(),
+                      menuUser(),
                     ],
                   ),
                 ],
@@ -74,7 +74,7 @@ class _SalerServiceState extends State<SalerService> {
     );
   }
 
-  Widget buildHead() {
+   Widget buildHead() {
     return UserAccountsDrawerHeader(
       decoration: const BoxDecoration(
         gradient: RadialGradient(
@@ -89,30 +89,7 @@ class _SalerServiceState extends State<SalerService> {
     );
   }
 
-  ListTile menuOrder() {
-    return ListTile(
-      onTap: () {
-        setState(() {
-          // indexwidget = 0;
-          Navigator.pop(context);
-        });
-      },
-      leading: const Icon(
-        Icons.event_note_outlined,
-        color: MyConstant.dark,
-      ),
-      title: ShowTitle(
-        title: 'ออเดอร์ของลูกค้า',
-        textStyle: MyConstant().h2Style(),
-      ),
-      subtitle: ShowTitle(
-        title: 'แสดงรายละเอียด ออเดอร์ของลูกค้าที่สั่งอาหาร',
-        textStyle: MyConstant().h3Style(),
-      ),
-    );
-  }
-
-  ListTile menuProduct() {
+  ListTile menuShop() {
     return ListTile(
       onTap: () {
         setState(() {
@@ -121,21 +98,21 @@ class _SalerServiceState extends State<SalerService> {
         });
       },
       leading: const Icon(
-        Icons.flatware_outlined,
+        Icons.storefront_outlined,
         color: MyConstant.dark,
       ),
       title: ShowTitle(
-        title: 'จัดการเมนูอาหาร',
+        title: 'เกี่ยวกับร้านค้า',
         textStyle: MyConstant().h2Style(),
       ),
       subtitle: ShowTitle(
-        title: 'เพิ่ม/ลบ/แก้ไข เมนูอาหาร',
+        title: 'เพิ่ม/ลบ/แก้ไข ร้านอาหาร',
         textStyle: MyConstant().h3Style(),
       ),
     );
   }
 
-  ListTile menuShop() {
+  ListTile menuUser() {
     return ListTile(
       onTap: () {
         setState(() {
@@ -144,15 +121,15 @@ class _SalerServiceState extends State<SalerService> {
         });
       },
       leading: const Icon(
-        Icons.storefront_outlined,
+        Icons.supervised_user_circle_outlined,
         color: MyConstant.dark,
       ),
       title: ShowTitle(
-        title: 'จัดการหน้าร้าน',
+        title: 'เกี่ยวกับผู้ใช้งาน',
         textStyle: MyConstant().h2Style(),
       ),
       subtitle: ShowTitle(
-        title: 'ปรับปรุง/แก้ไข หน้าร้านค้า และ location',
+        title: 'เพิ่ม/ลบ/แก้ไข User',
         textStyle: MyConstant().h3Style(),
       ),
     );
