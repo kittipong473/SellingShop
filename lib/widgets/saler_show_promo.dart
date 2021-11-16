@@ -12,15 +12,15 @@ import 'package:sellingshop/widgets/show_image.dart';
 import 'package:sellingshop/widgets/show_progress.dart';
 import 'package:sellingshop/widgets/show_title.dart';
 
-class ShowProduct extends StatefulWidget {
+class SalerShowPromo extends StatefulWidget {
   final String type;
-  const ShowProduct({Key? key, required this.type}) : super(key: key);
+  const SalerShowPromo({Key? key, required this.type}) : super(key: key);
 
   @override
-  _ShowProductState createState() => _ShowProductState();
+  _SalerShowPromoState createState() => _SalerShowPromoState();
 }
 
-class _ShowProductState extends State<ShowProduct> {
+class _SalerShowPromoState extends State<SalerShowPromo> {
   String? type;
   bool load = true;
   bool? data;
@@ -36,25 +36,23 @@ class _ShowProductState extends State<ShowProduct> {
     if (productModel.isNotEmpty) {
       productModel.clear();
     }
-
     type = widget.type;
     String path =
         '${MyConstant.domain}/phpTemplate/restaurant/getProductWhereType.php?isAdd=true&type=$type';
-    await Dio().get(path).then((value) {
+    await Dio().get(path).then((value) async {
+      if (value.toString() == 'null') {
+        setState(() {
+          load = false;
+          data = false;
+        });
+      }
       for (var item in json.decode(value.data)) {
-        if (value.toString() == 'null') {
-          setState(() {
-            load = false;
-            data = false;
-          });
-        } else {
-          ProductModel model = ProductModel.fromMap(item);
-          setState(() {
-            load = false;
-            data = true;
-            productModel.add(model);
-          });
-        }
+        ProductModel model = ProductModel.fromMap(item);
+        setState(() {
+          load = false;
+          data = true;
+          productModel.add(model);
+        });
       }
     });
   }
@@ -265,9 +263,8 @@ class _ShowProductState extends State<ShowProduct> {
                   String path =
                       '${MyConstant.domain}/phpTemplate/restaurant/deleteProduct.php?isAdd=true&id=${productModel.id}';
                   await Dio().get(path).then((value) {
-                    Navigator.pop(context);
                     Fluttertoast.showToast(
-                      msg: 'ลบรายการของคุณแล้ว',
+                      msg: 'ลบรายการ ${productModel.name} แล้ว',
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 3,
@@ -275,6 +272,7 @@ class _ShowProductState extends State<ShowProduct> {
                       textColor: Colors.white,
                       fontSize: 16.0,
                     );
+                    Navigator.pop(context);
                     Navigator.pop(context);
                     getProduct();
                   });

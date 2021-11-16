@@ -163,6 +163,9 @@ class _BuyerHomeState extends State<BuyerHome> {
             dotVerticalPadding: 5.0,
             images: [
               InkWell(
+                onTap: () {
+                  showPicture('${MyConstant.domain}${adverts[0]}', constraints);
+                },
                 child: CachedNetworkImage(
                   imageUrl: '${MyConstant.domain}${adverts[0]}',
                   placeholder: (context, url) => const ShowProgress(),
@@ -171,6 +174,9 @@ class _BuyerHomeState extends State<BuyerHome> {
                 ),
               ),
               InkWell(
+                onTap: () {
+                  showPicture('${MyConstant.domain}${adverts[1]}', constraints);
+                },
                 child: CachedNetworkImage(
                   imageUrl: '${MyConstant.domain}${adverts[1]}',
                   placeholder: (context, url) => const ShowProgress(),
@@ -179,6 +185,9 @@ class _BuyerHomeState extends State<BuyerHome> {
                 ),
               ),
               InkWell(
+                onTap: () {
+                  showPicture('${MyConstant.domain}${adverts[2]}', constraints);
+                },
                 child: CachedNetworkImage(
                   imageUrl: '${MyConstant.domain}${adverts[2]}',
                   placeholder: (context, url) => const ShowProgress(),
@@ -266,6 +275,24 @@ class _BuyerHomeState extends State<BuyerHome> {
           ],
         ),
       ],
+    );
+  }
+
+  Future showPicture(String url, BoxConstraints constraints) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: SizedBox(
+          width: constraints.maxWidth,
+          height: constraints.maxWidth * 0.5,
+          child: CachedNetworkImage(
+            imageUrl: url,
+            placeholder: (context, url) => const ShowProgress(),
+            errorWidget: (context, url, error) =>
+                ShowImage(path: MyConstant.error),
+          ),
+        ),
+      ),
     );
   }
 

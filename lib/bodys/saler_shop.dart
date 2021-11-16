@@ -4,9 +4,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:fijkplayer/fijkplayer.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sellingshop/models/shop_model.dart';
 import 'package:sellingshop/utility/my_constant.dart';
+import 'package:sellingshop/utility/my_dialog.dart';
 import 'package:sellingshop/widgets/show_image.dart';
 import 'package:sellingshop/widgets/show_progress.dart';
 import 'package:sellingshop/widgets/show_title.dart';
@@ -32,6 +34,7 @@ class _SalerShopState extends State<SalerShop> {
   @override
   void initState() {
     super.initState();
+    checkPermission();
     getShopModel();
   }
 
@@ -54,6 +57,32 @@ class _SalerShopState extends State<SalerShop> {
         });
       }
     });
+  }
+
+  Future checkPermission() async {
+    bool locationService;
+    LocationPermission locationPermission;
+
+    locationService = await Geolocator.isLocationServiceEnabled();
+    if (locationService) {
+      locationPermission = await Geolocator.checkPermission();
+      if (locationPermission == LocationPermission.denied) {
+        locationPermission = await Geolocator.requestPermission();
+        if (locationPermission == LocationPermission.deniedForever) {
+          MyDialog().alertLocationService(context, 'ไม่สามารถใช้งานได้', 'กรุณาอนุญาตการเข้าถึง Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
+        } else {
+          // Find LatLng
+        }
+      } else {
+        if (locationPermission == LocationPermission.deniedForever) {
+          MyDialog().alertLocationService(context, 'ไม่สามารถใช้งานได้', 'กรุณาอนุญาตการเข้าถึง Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
+        } else {
+          // Find LatLng
+        }
+      }
+    } else {
+      MyDialog().alertLocationService(context, 'Location ของคุณปิดอยู่', 'กรูณาเปิด Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
+    }
   }
 
   void convertArray() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sellingshop/utility/my_constant.dart';
-import 'package:sellingshop/widgets/show_product.dart';
+import 'package:sellingshop/widgets/saler_show_product.dart';
 
 class SalerProduct extends StatefulWidget {
   const SalerProduct({Key? key}) : super(key: key);

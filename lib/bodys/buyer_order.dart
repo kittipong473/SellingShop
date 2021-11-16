@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:sellingshop/models/shop_model.dart';
 import 'package:sellingshop/utility/my_constant.dart';
 import 'package:sellingshop/utility/my_dialog.dart';
-import 'package:sellingshop/widgets/show_menu.dart';
-import 'package:sellingshop/widgets/show_promo.dart';
+import 'package:sellingshop/widgets/buyer_menu_all.dart';
+import 'package:sellingshop/widgets/buyer_show_menu.dart';
+import 'package:sellingshop/widgets/buyer_show_promo.dart';
 
 class BuyerOrder extends StatefulWidget {
   const BuyerOrder({Key? key}) : super(key: key);
@@ -38,6 +39,12 @@ class _BuyerOrderState extends State<BuyerOrder> {
     });
   }
 
+  void findMenu(String search) async {
+    if (search.isNotEmpty || search != " ") {
+      
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -57,6 +64,10 @@ class _BuyerOrderState extends State<BuyerOrder> {
             indicatorColor: Colors.white,
             indicatorWeight: 5,
             tabs: [
+              // Tab(
+              //   icon: Icon(Icons.restaurant_menu_outlined),
+              //   text: 'ทั้งหมด',
+              // ),
               Tab(
                 icon: Icon(Icons.lunch_dining_outlined),
                 text: 'อาหาร',
@@ -80,6 +91,7 @@ class _BuyerOrderState extends State<BuyerOrder> {
         ),
         body: const TabBarView(
           children: [
+            // MenuAll(),
             ShowMenu(type: 'อาหาร'),
             ShowMenu(type: 'ของหวาน'),
             ShowMenu(type: 'เครื่องดื่ม'),

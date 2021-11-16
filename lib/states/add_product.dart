@@ -152,7 +152,7 @@ class _AddProductState extends State<AddProduct> {
               await MultipartFile.fromFile(file!.path, filename: nameImage);
           FormData data = FormData.fromMap(map);
           await Dio().post(api, data: data).then((value) {
-            image = 'phpTemplate/restaurant/product/$nameImage';
+            image = '/phpTemplate/restaurant/product/$nameImage';
             processInsert(name: name, price: price, detail: detail);
           });
         }

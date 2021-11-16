@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sellingshop/models/shop_model.dart';
 import 'package:sellingshop/utility/my_constant.dart';
+import 'package:sellingshop/utility/my_dialog.dart';
 import 'package:sellingshop/widgets/show_progress.dart';
 import 'package:sellingshop/widgets/show_title.dart';
+import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BuyerContact extends StatefulWidget {
@@ -27,6 +30,7 @@ class _BuyerContactState extends State<BuyerContact> {
   @override
   void initState() {
     super.initState();
+    checkPermission();
     getShopModel();
   }
 
@@ -42,6 +46,32 @@ class _BuyerContactState extends State<BuyerContact> {
       }
       shopModel == null ? const ShowProgress() : getOpenClose();
     });
+  }
+
+  Future checkPermission() async {
+    bool locationService;
+    LocationPermission locationPermission;
+
+    locationService = await Geolocator.isLocationServiceEnabled();
+    if (locationService) {
+      locationPermission = await Geolocator.checkPermission();
+      if (locationPermission == LocationPermission.denied) {
+        locationPermission = await Geolocator.requestPermission();
+        if (locationPermission == LocationPermission.deniedForever) {
+          MyDialog().alertLocationService(context, 'ไม่สามารถใช้งานได้', 'กรุณาอนุญาตการเข้าถึง Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
+        } else {
+          // Find LatLng
+        }
+      } else {
+        if (locationPermission == LocationPermission.deniedForever) {
+          MyDialog().alertLocationService(context, 'ไม่สามารถใช้งานได้', 'กรุณาอนุญาตการเข้าถึง Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
+        } else {
+          // Find LatLng
+        }
+      }
+    } else {
+      MyDialog().alertLocationService(context, 'Location ของคุณปิดอยู่', 'กรูณาเปิด Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
+    }
   }
 
   void getOpenClose() {
@@ -131,6 +161,17 @@ class _BuyerContactState extends State<BuyerContact> {
     return Row(
       children: [
         ShowTitle(title: 'Page ของร้าน : ', textStyle: MyConstant().h2Style()),
+        // Link(
+        //   target: LinkTarget.self,
+        //   // uri: Uri.parse('https://www.facebook.com/Charozc4fe'),
+        //   uri: Uri.parse('https://flutter.dev'),
+        //   builder: (context, followLink) => ElevatedButton(
+        //     onPressed: followLink,
+        //     child: const Text(
+        //       'Charoz Facebook Page',
+        //     ),
+        //   ),
+        // ),
         RichText(
           text: TextSpan(
             style: const TextStyle(color: Colors.blue),
@@ -139,7 +180,7 @@ class _BuyerContactState extends State<BuyerContact> {
               ..onTap = () async {
                 var url = "https://www.facebook.com/Charozc4fe";
                 if (await canLaunch(url)) {
-                  await launch(url);
+                  await launch(url,forceSafariVC: true,forceWebView: true,enableJavaScript: true);
                 } else {
                   throw 'Could not launch $url';
                 }

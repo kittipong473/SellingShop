@@ -385,8 +385,6 @@ class _EditProductState extends State<EditProduct> {
     String path =
         '${MyConstant.domain}/phpTemplate/restaurant/editProduct.php?isAdd=true&id=$id&name=$name&type=$type&price=$price&detail=$detail&image=$image&status=$status';
     await Dio().get(path).then((value) {
-      Navigator.pop(context);
-      Navigator.pop(context);
       Fluttertoast.showToast(
           msg: 'แก้ไขรายการ $name แล้ว',
           toastLength: Toast.LENGTH_SHORT,
@@ -395,6 +393,8 @@ class _EditProductState extends State<EditProduct> {
           textColor: Colors.white,
           fontSize: 16.0,
         );
+      Navigator.pop(context);
+      Navigator.pop(context);
     });
   }
 }
