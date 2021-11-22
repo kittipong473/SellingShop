@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sellingshop/utility/my_constant.dart';
@@ -130,8 +131,10 @@ class _AddPromoState extends State<AddPromo> {
           map['file'] =
               await MultipartFile.fromFile(file!.path, filename: nameImage);
           FormData data = FormData.fromMap(map);
+          EasyLoading.show(status: 'Uploading...');
           await Dio().post(api, data: data).then((value) {
             image = '/phpTemplate/restaurant/product/$nameImage';
+            EasyLoading.showSuccess('Upload Success!');
             processInsert(name: name, price: price, detail: detail);
           });
         }
@@ -217,12 +220,12 @@ class _AddPromoState extends State<AddPromo> {
         controller: nameController,
         validator: (value) {
           if (value!.isEmpty) {
-            return 'กรุณากรอก ชื่อสินค้า';
+            return 'กรุณากรอก ชื่อโปรโมชั่น';
           }
         },
         decoration: InputDecoration(
             labelStyle: MyConstant().h3Style(),
-            labelText: 'ชื่อสินค้า :',
+            labelText: 'ชื่อโปรโมชั่น :',
             prefixIcon: const Icon(
               Icons.receipt,
               color: MyConstant.dark,
@@ -251,13 +254,13 @@ class _AddPromoState extends State<AddPromo> {
         controller: detailController,
         validator: (value) {
           if (value!.isEmpty) {
-            return 'กรุณากรอก รายละเอียดสินค้า';
+            return 'กรุณากรอก รายละเอียดโปรโมชั่น';
           }
         },
         maxLines: 3,
         decoration: InputDecoration(
           hintStyle: MyConstant().h3Style(),
-          hintText: 'รายละเอียดสินค้า :',
+          hintText: 'รายละเอียดโปรโมชั่น :',
           prefixIcon: const Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 40),
             child: Icon(

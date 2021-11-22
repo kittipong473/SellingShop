@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sellingshop/models/shop_model.dart';
 import 'package:sellingshop/states/admin_showshop.dart';
 import 'package:sellingshop/utility/my_constant.dart';
+import 'package:sellingshop/widgets/show_image.dart';
 import 'package:sellingshop/widgets/show_progress.dart';
 import 'package:sellingshop/widgets/show_title.dart';
 
@@ -56,15 +57,15 @@ class _AdminShopState extends State<AdminShop> {
                 itemBuilder: (context, index) => GestureDetector(
                   onTap: () {
                     Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AdminShowShop(
-                                shopModel: shopModel[index],
-                              ),
-                            ),
-                          ).then((value) {
-                            return getShop();
-                          });
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AdminShowShop(
+                          shopModel: shopModel[index],
+                        ),
+                      ),
+                    ).then((value) {
+                      return getShop();
+                    });
                   },
                   child: Card(
                     child: Padding(
@@ -73,9 +74,16 @@ class _AdminShopState extends State<AdminShop> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           SizedBox(
-                              width: 150,
-                              height: 100,
-                              child: Image.asset(MyConstant.shop1)),
+                            width: 150,
+                            height: 100,
+                            child: CachedNetworkImage(
+                              imageUrl: shopModel[index].image,
+                              placeholder: (context, url) =>
+                                  const ShowProgress(),
+                              errorWidget: (context, url, error) =>
+                                  ShowImage(path: MyConstant.error),
+                            ),
+                          ),
                           ShowTitle(
                               title: shopModel[index].name,
                               textStyle: MyConstant().h2Style()),
@@ -89,13 +97,13 @@ class _AdminShopState extends State<AdminShop> {
                 ),
               ),
             ),
-             floatingActionButton: FloatingActionButton(
-              backgroundColor: MyConstant.dark,
-              onPressed: () =>
-                  Navigator.pushNamed(context, MyConstant.routeAdminAddShop)
-                      .then((value) => getShop()),
-              child: const Icon(Icons.add_outlined),
-            ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: MyConstant.dark,
+        onPressed: () =>
+            Navigator.pushNamed(context, MyConstant.routeAdminAddShop)
+                .then((value) => getShop()),
+        child: const Icon(Icons.add_outlined),
+      ),
     );
   }
 }

@@ -84,13 +84,13 @@ class _BuyerContactState extends State<BuyerContact> {
 
     if (shopModel!.openclose == '1') {
       if (time.weekday >= 1 && time.weekday <= 5) {
-        if (time.hour >= 16 && time.hour <= 21) {
+        if (time.hour >= MyConstant.wdOpen && time.hour <= MyConstant.wdClose) {
           status = timeshop[0];
         } else {
           status = timeshop[1];
         }
       } else {
-        if (time.hour >= 10 && time.hour <= 21) {
+        if (time.hour >= MyConstant.weOpen && time.hour <=MyConstant.weClose) {
           status = timeshop[0];
         } else {
           status = timeshop[1];
@@ -161,17 +161,6 @@ class _BuyerContactState extends State<BuyerContact> {
     return Row(
       children: [
         ShowTitle(title: 'Page ของร้าน : ', textStyle: MyConstant().h2Style()),
-        // Link(
-        //   target: LinkTarget.self,
-        //   // uri: Uri.parse('https://www.facebook.com/Charozc4fe'),
-        //   uri: Uri.parse('https://flutter.dev'),
-        //   builder: (context, followLink) => ElevatedButton(
-        //     onPressed: followLink,
-        //     child: const Text(
-        //       'Charoz Facebook Page',
-        //     ),
-        //   ),
-        // ),
         RichText(
           text: TextSpan(
             style: const TextStyle(color: Colors.blue),

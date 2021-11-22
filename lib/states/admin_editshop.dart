@@ -42,7 +42,6 @@ class _AdminEditShopState extends State<AdminEditShop> {
     } else {
       chooseStatus = 'เปิดตามปกติ';
     }
-    chooseStatus = shopModel!.openclose;
     shopModel == null ? const ShowProgress() : load = false;
   }
 
@@ -85,7 +84,7 @@ class _AdminEditShopState extends State<AdminEditShop> {
   Widget buildName(BoxConstraints constraints) {
     return Container(
       width: constraints.maxWidth * 0.6,
-      margin: const EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 50),
       child: TextFormField(
         controller: nameController,
         validator: (value) {
@@ -119,7 +118,7 @@ class _AdminEditShopState extends State<AdminEditShop> {
   Widget buildPhone(BoxConstraints constraints) {
     return Container(
       width: constraints.maxWidth * 0.6,
-      margin: const EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 30),
       child: TextFormField(
         controller: phoneController,
         validator: (value) {
@@ -155,8 +154,9 @@ class _AdminEditShopState extends State<AdminEditShop> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
+        Container(
           width: constraints.maxWidth * 0.6,
+          margin: const EdgeInsets.only(top: 30),
           child: TextFormField(
             controller: addressController,
             validator: (value) {
@@ -196,9 +196,9 @@ class _AdminEditShopState extends State<AdminEditShop> {
   Widget buildLat(BoxConstraints constraints) {
     return Container(
       width: constraints.maxWidth * 0.6,
-      margin: const EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 30),
       child: TextFormField(
-        controller: nameController,
+        controller: latController,
         validator: (value) {
           if (value!.isEmpty) {
             return 'กรุณากรอก Latitude';
@@ -230,9 +230,9 @@ class _AdminEditShopState extends State<AdminEditShop> {
   Widget buildLng(BoxConstraints constraints) {
     return Container(
       width: constraints.maxWidth * 0.6,
-      margin: const EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 30),
       child: TextFormField(
-        controller: nameController,
+        controller: lngController,
         validator: (value) {
           if (value!.isEmpty) {
             return 'กรุณากรอก Longitude';
@@ -265,10 +265,11 @@ class _AdminEditShopState extends State<AdminEditShop> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
+        Container(
           width: constraints.maxWidth * 0.6,
+          margin: const EdgeInsets.only(top: 30),
           child: TextFormField(
-            controller: addressController,
+            controller: timeController,
             validator: (value) {
               if (value!.isEmpty) {
                 return 'กรุณากรอก เวลาเปิด-ปิด';
@@ -307,8 +308,9 @@ class _AdminEditShopState extends State<AdminEditShop> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
+        Container(
           width: constraints.maxWidth * 0.6,
+          margin: const EdgeInsets.only(top: 30),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -336,8 +338,9 @@ class _AdminEditShopState extends State<AdminEditShop> {
   }
 
   Widget buildEditButton(BoxConstraints constraints) {
-    return SizedBox(
+    return Container(
       width: constraints.maxWidth * 0.6,
+      margin: const EdgeInsets.only(top: 30),
       child: ElevatedButton(
         style: MyConstant().myButtonStyle(),
         onPressed: () {
@@ -404,7 +407,7 @@ class _AdminEditShopState extends State<AdminEditShop> {
     }
 
     String path =
-        '${MyConstant.domain}/phpTemplate/restaurant/editProduct.php?isAdd=true&id=$id&name=$name&phone=$phone&address=$address&lat=$lat&lng=$lng&time=$time&openclose=$status';
+        '${MyConstant.domain}/phpTemplate/restaurant/adminEditShop.php?isAdd=true&id=$id&name=$name&phone=$phone&address=$address&lat=$lat&lng=$lng&time=$time&openclose=$status';
     await Dio().get(path).then((value) {
       Navigator.pop(context);
       Fluttertoast.showToast(

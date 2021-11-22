@@ -39,7 +39,7 @@ class _BuyerHomeState extends State<BuyerHome> {
         setState(() {
           shopModel = ShopModel.fromMap(item);
           player.setDataSource(
-            '${MyConstant.domain}${shopModel!.image}',
+            '${MyConstant.domain}${shopModel!.video}',
             autoPlay: true,
             showCover: false,
           );

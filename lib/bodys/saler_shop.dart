@@ -48,7 +48,7 @@ class _SalerShopState extends State<SalerShop> {
         setState(() {
           shopModel = ShopModel.fromMap(item);
           player.setDataSource(
-            '${MyConstant.domain}${shopModel!.image}',
+            '${MyConstant.domain}${shopModel!.video}',
             autoPlay: true,
             showCover: false,
           );
@@ -69,25 +69,28 @@ class _SalerShopState extends State<SalerShop> {
       if (locationPermission == LocationPermission.denied) {
         locationPermission = await Geolocator.requestPermission();
         if (locationPermission == LocationPermission.deniedForever) {
-          MyDialog().alertLocationService(context, 'ไม่สามารถใช้งานได้', 'กรุณาอนุญาตการเข้าถึง Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
+          MyDialog().alertLocationService(context, 'ไม่สามารถใช้งานได้',
+              'กรุณาอนุญาตการเข้าถึง Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
         } else {
           // Find LatLng
         }
       } else {
         if (locationPermission == LocationPermission.deniedForever) {
-          MyDialog().alertLocationService(context, 'ไม่สามารถใช้งานได้', 'กรุณาอนุญาตการเข้าถึง Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
+          MyDialog().alertLocationService(context, 'ไม่สามารถใช้งานได้',
+              'กรุณาอนุญาตการเข้าถึง Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
         } else {
           // Find LatLng
         }
       }
     } else {
-      MyDialog().alertLocationService(context, 'Location ของคุณปิดอยู่', 'กรูณาเปิด Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
+      MyDialog().alertLocationService(context, 'Location ของคุณปิดอยู่',
+          'กรูณาเปิด Location เพื่อเข้าใช้งานแอพพลิเคชั่น');
     }
   }
 
   void convertArray() {
     String string = shopModel!.advert;
-    string = string.substring(1, string.length-1);
+    string = string.substring(1, string.length - 1);
     List<String> strings = string.split(',');
     for (var item in strings) {
       pathImage.add(item.trim());
@@ -103,20 +106,20 @@ class _SalerShopState extends State<SalerShop> {
       timeshop.add(item.trim());
     }
 
-    if(shopModel!.openclose == '1'){
-    if (time.weekday >= 1 && time.weekday <= 5) {
-      if (time.hour >= 16 && time.hour <= 21) {
-        status = timeshop[0];
+    if (shopModel!.openclose == '1') {
+      if (time.weekday >= 1 && time.weekday <= 5) {
+        if (time.hour >= MyConstant.wdOpen && time.hour <= MyConstant.wdClose) {
+          status = timeshop[0];
+        } else {
+          status = timeshop[1];
+        }
       } else {
-        status = timeshop[1];
+        if (time.hour >= MyConstant.weOpen && time.hour <= MyConstant.weClose) {
+          status = timeshop[0];
+        } else {
+          status = timeshop[1];
+        }
       }
-    } else {
-      if (time.hour >= 10 && time.hour <= 21) {
-        status = timeshop[0];
-      } else {
-        status = timeshop[1];
-      }
-    }
     } else {
       status = timeshop[2];
     }
@@ -147,7 +150,14 @@ class _SalerShopState extends State<SalerShop> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: ShowTitle(
-                            title: 'รูปภาพ/วีดีโอ ของร้านค้า : ',
+                            title: 'วีดีโอของร้านค้า : ',
+                            textStyle: MyConstant().h2Style()),
+                      ),
+                      buildVideo(constraints),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: ShowTitle(
+                            title: 'รูปภาพของร้านค้า : ',
                             textStyle: MyConstant().h2Style()),
                       ),
                       buildImage(constraints),
@@ -214,17 +224,40 @@ class _SalerShopState extends State<SalerShop> {
     );
   }
 
+  Row buildVideo(BoxConstraints constraints) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        load
+            ? const ShowProgress()
+            : Container(
+                margin: const EdgeInsets.symmetric(vertical: 16),
+                width: constraints.maxWidth * 0.9,
+                height: constraints.maxWidth * 0.5,
+                child: FijkView(player: player),
+              ),
+      ],
+    );
+  }
+
   Row buildImage(BoxConstraints constraints) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        load ? const ShowProgress() :
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 16),
-          width: constraints.maxWidth * 0.9,
-          height: constraints.maxWidth * 0.5,
-          child: FijkView(player: player),
-        ),
+        load
+            ? const ShowProgress()
+            : Container(
+                margin: const EdgeInsets.symmetric(vertical: 16),
+                width: constraints.maxWidth * 0.6,
+                height: constraints.maxWidth * 0.6,
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: '${MyConstant.domain}${shopModel?.image}',
+                  placeholder: (context, url) => const ShowProgress(),
+                  errorWidget: (context, url, error) =>
+                      ShowImage(path: MyConstant.picture),
+                ),
+              ),
       ],
     );
   }
@@ -296,44 +329,50 @@ class _SalerShopState extends State<SalerShop> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                      width: 48,
-                      height: 48,
-                      child: InkWell(
-                          onTap: () => setState(() {
-                                index = 0;
-                              }),
-                          child: CachedNetworkImage(
-                            imageUrl: '${MyConstant.domain}${pathImage[0]}',
-                            placeholder: (context, url) => const ShowProgress(),
-                            errorWidget: (context, url, error) =>
-                                ShowImage(path: MyConstant.error),
-                          ))),
+                    width: 48,
+                    height: 48,
+                    child: InkWell(
+                      onTap: () => setState(() {
+                        index = 0;
+                      }),
+                      child: CachedNetworkImage(
+                        imageUrl: '${MyConstant.domain}${pathImage[0]}',
+                        placeholder: (context, url) => const ShowProgress(),
+                        errorWidget: (context, url, error) =>
+                            ShowImage(path: MyConstant.error),
+                      ),
+                    ),
+                  ),
                   SizedBox(
-                      width: 48,
-                      height: 48,
-                      child: InkWell(
-                          onTap: () => setState(() {
-                                index = 1;
-                              }),
-                          child: CachedNetworkImage(
-                            imageUrl: '${MyConstant.domain}${pathImage[1]}',
-                            placeholder: (context, url) => const ShowProgress(),
-                            errorWidget: (context, url, error) =>
-                                ShowImage(path: MyConstant.error),
-                          ))),
+                    width: 48,
+                    height: 48,
+                    child: InkWell(
+                      onTap: () => setState(() {
+                        index = 1;
+                      }),
+                      child: CachedNetworkImage(
+                        imageUrl: '${MyConstant.domain}${pathImage[1]}',
+                        placeholder: (context, url) => const ShowProgress(),
+                        errorWidget: (context, url, error) =>
+                            ShowImage(path: MyConstant.error),
+                      ),
+                    ),
+                  ),
                   SizedBox(
-                      width: 48,
-                      height: 48,
-                      child: InkWell(
-                          onTap: () => setState(() {
-                                index = 2;
-                              }),
-                          child: CachedNetworkImage(
-                            imageUrl: '${MyConstant.domain}${pathImage[2]}',
-                            placeholder: (context, url) => const ShowProgress(),
-                            errorWidget: (context, url, error) =>
-                                ShowImage(path: MyConstant.error),
-                          ))),
+                    width: 48,
+                    height: 48,
+                    child: InkWell(
+                      onTap: () => setState(() {
+                        index = 2;
+                      }),
+                      child: CachedNetworkImage(
+                        imageUrl: '${MyConstant.domain}${pathImage[2]}',
+                        placeholder: (context, url) => const ShowProgress(),
+                        errorWidget: (context, url, error) =>
+                            ShowImage(path: MyConstant.error),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -58,13 +58,13 @@ class _AdminShowShopState extends State<AdminShowShop> {
 
     if (shopModel!.openclose == '1') {
       if (time.weekday >= 1 && time.weekday <= 5) {
-        if (time.hour >= 16 && time.hour <= 21) {
+        if (time.hour >= MyConstant.wdOpen && time.hour <= MyConstant.wdClose) {
           status = timeshop[0];
         } else {
           status = timeshop[1];
         }
       } else {
-        if (time.hour >= 10 && time.hour <= 21) {
+        if (time.hour >= MyConstant.weOpen && time.hour <= MyConstant.weClose) {
           status = timeshop[0];
         } else {
           status = timeshop[1];

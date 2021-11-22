@@ -6,6 +6,7 @@ class ShopModel {
   final String phone;
   final String address;
   final String image;
+  final String video;
   final String lat;
   final String lng;
   final String status;
@@ -19,6 +20,7 @@ class ShopModel {
     required this.phone,
     required this.address,
     required this.image,
+    required this.video,
     required this.lat,
     required this.lng,
     required this.status,
@@ -34,6 +36,7 @@ class ShopModel {
     String? phone,
     String? address,
     String? image,
+    String? video,
     String? lat,
     String? lng,
     String? status,
@@ -48,6 +51,7 @@ class ShopModel {
       phone: phone ?? this.phone,
       address: address ?? this.address,
       image: image ?? this.image,
+      video: video ?? this.video,
       lat: lat ?? this.lat,
       lng: lng ?? this.lng,
       status: status ?? this.status,
@@ -65,6 +69,7 @@ class ShopModel {
       'phone': phone,
       'address': address,
       'image': image,
+      'video': video,
       'lat': lat,
       'lng': lng,
       'status': status,
@@ -82,6 +87,7 @@ class ShopModel {
       phone: map['phone'],
       address: map['address'],
       image: map['image'],
+      video: map['video'],
       lat: map['lat'],
       lng: map['lng'],
       status: map['status'],
@@ -98,7 +104,7 @@ class ShopModel {
 
   @override
   String toString() {
-    return 'ShopModel(id: $id, name: $name, phone: $phone, address: $address, image: $image, lat: $lat, lng: $lng, status: $status, time: $time, openclose: $openclose, desc: $desc, advert: $advert)';
+    return 'ShopModel(id: $id, name: $name, phone: $phone, address: $address, image: $image, video: $video, lat: $lat, lng: $lng, status: $status, time: $time, openclose: $openclose, desc: $desc, advert: $advert)';
   }
 
   @override
@@ -111,6 +117,7 @@ class ShopModel {
       other.phone == phone &&
       other.address == address &&
       other.image == image &&
+      other.video == video &&
       other.lat == lat &&
       other.lng == lng &&
       other.status == status &&
@@ -127,6 +134,7 @@ class ShopModel {
       phone.hashCode ^
       address.hashCode ^
       image.hashCode ^
+      video.hashCode ^
       lat.hashCode ^
       lng.hashCode ^
       status.hashCode ^

@@ -24,10 +24,12 @@ class EditShop extends StatefulWidget {
 
 class _EditShopState extends State<EditShop> {
   ShopModel? shopModel;
-  String? fileShow;
+  String? fileVideo;
+  String? fileImage;
   String? chooseStatus;
   String? showPath;
-  File? file;
+  File? fileV;
+  File? fileI;
   bool statusVideo = false;
   bool statusImage = false;
   bool statusAdvert = false;
@@ -54,8 +56,10 @@ class _EditShopState extends State<EditShop> {
         setState(() {
           shopModel = ShopModel.fromMap(item);
           descController.text = shopModel!.desc;
+          fileVideo = shopModel!.video;
+          fileImage = shopModel!.image;
           load = false;
-          if (shopModel!.openclose == 1) {
+          if (shopModel!.openclose == '1') {
             chooseStatus = 'เปิดตามปกติ';
           } else {
             chooseStatus = 'ปิดกรณีพิเศษ';
@@ -113,19 +117,27 @@ class _EditShopState extends State<EditShop> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: ShowTitle(
-                              title: 'รูปภาพ/วีดีโอของร้านค้า : ',
+                              title: 'วีดีโอของร้านค้า : ',
                               textStyle: MyConstant().h2Style()),
                         ),
-                        buildImageVideo(constraints),
+                        buildVideo(constraints),
                         const SizedBox(height: 10.0),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            file == null
-                                ? Text(shopModel!.image)
+                            fileV == null
+                                ? Text(shopModel!.video)
                                 : Text(cutWord(showPath!)),
                           ],
                         ),
+                        const SizedBox(height: 50.0),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: ShowTitle(
+                              title: 'รูปภาพของร้านค้า : ',
+                              textStyle: MyConstant().h2Style()),
+                        ),
+                        buildImage(constraints),
                         const SizedBox(height: 50.0),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
@@ -239,10 +251,9 @@ class _EditShopState extends State<EditShop> {
         source: source,
       );
       setState(() {
-        file = File(result!.path);
+        fileV = File(result!.path);
         showPath = result.name.toString();
         statusVideo = true;
-        statusImage = false;
       });
     } catch (e) {
       //
@@ -257,10 +268,8 @@ class _EditShopState extends State<EditShop> {
         maxWidth: 800,
       );
       setState(() {
-        file = File(result!.path);
-        showPath = result.name.toString();
+        fileI = File(result!.path);
         statusImage = true;
-        statusVideo = false;
       });
     } catch (e) {
       //
@@ -283,10 +292,18 @@ class _EditShopState extends State<EditShop> {
     }
   }
 
-  Row buildImageVideo(BoxConstraints constraints) {
+  Row buildVideo(BoxConstraints constraints) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
+        IconButton(
+          onPressed: () => chooseVideo(ImageSource.camera),
+          icon: const Icon(
+            Icons.video_camera_back_outlined,
+            size: 36,
+            color: MyConstant.dark,
+          ),
+        ),
         IconButton(
           onPressed: () => chooseVideo(ImageSource.gallery),
           icon: const Icon(
@@ -295,10 +312,36 @@ class _EditShopState extends State<EditShop> {
             color: MyConstant.dark,
           ),
         ),
+      ],
+    );
+  }
+
+  Row buildImage(BoxConstraints constraints) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          onPressed: () => chooseImage(ImageSource.camera),
+          icon: const Icon(
+            Icons.add_a_photo,
+            size: 36,
+            color: MyConstant.dark,
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 5),
+          width: constraints.maxWidth * 0.5,
+          child: fileI == null
+              ? CachedNetworkImage(
+                  imageUrl: '${MyConstant.domain}$fileImage',
+                  placeholder: (context, url) => const ShowProgress(),
+                )
+              : Image.file(fileI!),
+        ),
         IconButton(
           onPressed: () => chooseImage(ImageSource.gallery),
           icon: const Icon(
-            Icons.photo_library_outlined,
+            Icons.add_photo_alternate,
             size: 36,
             color: MyConstant.dark,
           ),
@@ -403,24 +446,31 @@ class _EditShopState extends State<EditShop> {
       String nameVideo = 'video$i.mp4';
       Map<String, dynamic> map = {};
       map['file'] =
-          await MultipartFile.fromFile(file!.path, filename: nameVideo);
+          await MultipartFile.fromFile(fileV!.path, filename: nameVideo);
       FormData data = FormData.fromMap(map);
-      EasyLoading.show(status: 'Uploading...');
+      EasyLoading.show(status: 'Uploading Video...');
       await Dio().post(url, data: data).then((value) {
-        EasyLoading.showSuccess('Upload Success!');
-        fileShow = '/phpTemplate/restaurant/video/$nameVideo';
+        EasyLoading.showSuccess('Upload Video Success!');
+        fileVideo = '/phpTemplate/restaurant/video/$nameVideo';
       });
-    } else if (statusImage) {
+    }
+    insertImage();
+  }
+
+  Future insertImage () async {
+    if (statusImage) {
       String url =
           '${MyConstant.domain}/phpTemplate/restaurant/saveAvatarFile.php';
       int i = Random().nextInt(1000000);
       String nameImage = 'avatar$i.jpg';
       Map<String, dynamic> map = {};
       map['file'] =
-          await MultipartFile.fromFile(file!.path, filename: nameImage);
+          await MultipartFile.fromFile(fileI!.path, filename: nameImage);
       FormData data = FormData.fromMap(map);
+      EasyLoading.show(status: 'Uploading Image...');
       await Dio().post(url, data: data).then((value) {
-        fileShow = '/phpTemplate/restaurant/avatar/$nameImage';
+        EasyLoading.showSuccess('Upload Image Success!');
+        fileImage = '/phpTemplate/restaurant/avatar/$nameImage';
       });
     }
     insertAdvert();
@@ -432,16 +482,18 @@ class _EditShopState extends State<EditShop> {
       for (var item in files) {
         if (item != null) {
           int i = Random().nextInt(1000000);
-          String nameImage = 'avatart$i.jpg';
+          String nameAdvert = 'avatar$i.jpg';
           String apiUploadImage =
               '${MyConstant.domain}/phpTemplate/restaurant/saveAvatarFile.php';
 
           Map<String, dynamic> map = {};
           map['file'] =
-              await MultipartFile.fromFile(item.path, filename: nameImage);
+              await MultipartFile.fromFile(item.path, filename: nameAdvert);
           FormData formData = FormData.fromMap(map);
+          EasyLoading.show(status: 'Uploading Advert...');
           await Dio().post(apiUploadImage, data: formData).then((value) {
-            pathImage[index] = '/phpTemplate/restaurant/avatar/$nameImage';
+            EasyLoading.showSuccess('Upload Advert Success!');
+            pathImage[index] = '/phpTemplate/restaurant/avatar/$nameAdvert';
           });
         }
         index++;
@@ -462,7 +514,7 @@ class _EditShopState extends State<EditShop> {
     String desc = descController.text;
     EasyLoading.dismiss();
     String path =
-        '${MyConstant.domain}/phpTemplate/restaurant/editShop.php?isAdd=true&id=$id&image=$fileShow&openclose=$status&desc=$desc&advert=$advert';
+        '${MyConstant.domain}/phpTemplate/restaurant/editShop.php?isAdd=true&id=$id&image=$fileImage&video=$fileVideo&openclose=$status&desc=$desc&advert=$advert';
     await Dio().get(path).then((value) {
       EasyLoading.dismiss();
       Navigator.pop(context);

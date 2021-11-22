@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sellingshop/models/product_model.dart';
@@ -377,8 +378,10 @@ class _EditProductState extends State<EditProduct> {
       map['file'] =
           await MultipartFile.fromFile(file!.path, filename: nameImage);
       FormData data = FormData.fromMap(map);
+      EasyLoading.show(status: 'Uploading...');
       await Dio().post(api, data: data).then((value) {
-        image = 'phpTemplate/restaurant/product/$nameImage';
+        image = '/phpTemplate/restaurant/product/$nameImage';
+        EasyLoading.showSuccess('Upload Success!');
       });
     }
 

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class MyConstant {
   // General
   static String appName = 'Charoz Steak House';
-  // static String domain = 'http://192.168.1.43';
-  static String domain = 'http://af9f-2001-fb1-be-255a-19f6-3b35-fbb9-195c.ngrok.io';
+  static String domain = 'http://b883-2001-fb1-bc-4744-e4a9-fb27-f673-887c.ngrok.io';
 
   // Route
   static String routeHome = '/home';
@@ -38,7 +37,12 @@ class MyConstant {
   static String menu1 = 'images/menu1.jpg';
   static String menu2 = 'images/menu2.jpg';
   static String menu3 = 'images/menu3.jpg';
-  static String shop1 = 'images/shop1.jpg';
+
+  // Time of shop
+  static int wdOpen = 16;
+  static int wdClose = 21;
+  static int weOpen = 10;
+  static int weClose = 21;
 
   // Color
   static const Color primary = Color(0xffff8b51);

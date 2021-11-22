@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "449888050409",
+    "project_id": "sellingshop-db05d",
+    "storage_bucket": "sellingshop-db05d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449888050409:android:53e6cf73b1fdcd3ac0a478",
+        "android_client_info": {
+          "package_name": "com.sellingshop.sellingshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "449888050409-3edfakdaep1snn675m64ocd3kr22hq70.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9EoFaHF11_LuVm5rUw1U8AFng3VhJ_To"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "449888050409-3edfakdaep1snn675m64ocd3kr22hq70.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

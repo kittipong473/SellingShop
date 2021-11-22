@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sellingshop/utility/my_constant.dart';
+import 'package:sellingshop/widgets/buyer_show_promo.dart';
 import 'package:sellingshop/widgets/saler_show_product.dart';
 
 class SalerProduct extends StatefulWidget {
@@ -94,7 +95,8 @@ class _SalerProductState extends State<SalerProduct> {
             children: <Widget>[
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, MyConstant.routeAddProduct);
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, MyConstant.routeAddProduct).then((value) => const ShowProduct(type: 'อาหาร'));
                 },
                 child: Text(
                   'อาหาร',
@@ -103,7 +105,8 @@ class _SalerProductState extends State<SalerProduct> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, MyConstant.routeAddPromo);
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, MyConstant.routeAddPromo).then((value) => const ShowProduct(type: 'โปรโมชั่น'));
                 },
                 child: Text(
                   'โปรโมชั่น',

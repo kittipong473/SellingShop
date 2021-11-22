@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sellingshop/utility/my_constant.dart';
@@ -135,7 +136,7 @@ class _AddProductState extends State<AddProduct> {
     String name = nameController.text;
     String price = priceController.text;
     String detail = detailController.text;
-
+    
     String path =
         '${MyConstant.domain}/phpTemplate/restaurant/getProductWhereName.php?isAdd=true&name=$name';
     await Dio().get(path).then((value) async {
@@ -151,8 +152,10 @@ class _AddProductState extends State<AddProduct> {
           map['file'] =
               await MultipartFile.fromFile(file!.path, filename: nameImage);
           FormData data = FormData.fromMap(map);
+          EasyLoading.show(status: 'Uploading...');
           await Dio().post(api, data: data).then((value) {
             image = '/phpTemplate/restaurant/product/$nameImage';
+            EasyLoading.showSuccess('Upload Success!');
             processInsert(name: name, price: price, detail: detail);
           });
         }
@@ -172,7 +175,7 @@ class _AddProductState extends State<AddProduct> {
         Fluttertoast.showToast(
           msg: 'เพิ่มรายการ $name แล้ว',
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.black,
           textColor: Colors.white,
           fontSize: 16.0,

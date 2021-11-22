@@ -11,6 +11,7 @@ import 'package:sellingshop/utility/sqlite_helper.dart';
 import 'package:sellingshop/widgets/show_image.dart';
 import 'package:sellingshop/widgets/show_progress.dart';
 import 'package:sellingshop/widgets/show_title.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ShowMenu extends StatefulWidget {
   final String type;
@@ -25,11 +26,13 @@ class _ShowMenuState extends State<ShowMenu> {
   bool load = true;
   int count = 1;
   List<ProductModel> productModel = [];
+  bool login = false;
 
   @override
   void initState() {
     super.initState();
     getProduct();
+    getPreference();
   }
 
   Future getProduct() async {
@@ -49,6 +52,13 @@ class _ShowMenuState extends State<ShowMenu> {
         });
       }
     });
+  }
+
+  Future getPreference() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (preferences.getString('role') == 'buyer') {
+      login = true;
+    }
   }
 
   @override
@@ -169,7 +179,7 @@ class _ShowMenuState extends State<ShowMenu> {
                         textStyle: MyConstant().h2Style()),
                   ],
                 ),
-                /*
+                if (login == true) ...[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -204,26 +214,26 @@ class _ShowMenuState extends State<ShowMenu> {
                     ),
                   ],
                 ),
-                */
+                ]
               ],
             ),
           ),
           actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'ตกลง',
-                    style: MyConstant().h2BlueStyle(),
-                  ),
-                ),
-              ],
-            ),
-            /*
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     TextButton(
+            //       onPressed: () {
+            //         Navigator.pop(context);
+            //       },
+            //       child: Text(
+            //         'ตกลง',
+            //         style: MyConstant().h2BlueStyle(),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+          if (login==true) ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -274,7 +284,7 @@ class _ShowMenuState extends State<ShowMenu> {
                 ),
               ],
             ),
-            */
+          ],
           ],
         ),
       ),

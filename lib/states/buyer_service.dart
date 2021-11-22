@@ -34,7 +34,7 @@ class _BuyerServiceState extends State<BuyerService> {
     const BuyerContact(),
     const BuyerClosed(),
   ];
-  int indexwidget = 0;
+  int indexwidget = 1;
   UserModel? userModel;
   ShopModel? shopModel;
   String? status;
@@ -147,13 +147,15 @@ class _BuyerServiceState extends State<BuyerService> {
           if (status == null) {
             const ShowProgress();
           } else {
-            if (status == 'เปิดบริการ') {
-              indexwidget = 1;
-              Navigator.pop(context);
-            } else {
-              MyDialog().normalDialog(context, 'ร้านค้าปิดให้บริการแล้ว',
-                  'ขออภัยค่ะ โปรดใช้บริการใหม่ในภายหลัง');
-            }
+            // if (status == 'เปิดบริการ') {
+            //   indexwidget = 1;
+            //   Navigator.pop(context);
+            // } else {
+            //   MyDialog().normalDialog(context, 'ร้านค้าปิดให้บริการแล้ว',
+            //       'ขออภัยค่ะ โปรดใช้บริการใหม่ในภายหลัง');
+            // }
+            indexwidget = 1;
+            Navigator.pop(context);
           }
         });
       },
